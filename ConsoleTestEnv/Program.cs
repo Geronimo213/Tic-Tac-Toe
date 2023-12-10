@@ -1,7 +1,7 @@
 ﻿//Block to initialize base data.
 var board = new char[3,3];// Creation of 3x3 board
-var pieces = new char[2] { 'X', 'O' };// Bank of pieces in player1, player2 order
-var score = new int[2] { 0, 0 };
+var pieces = new [] { 'X', 'O' };// Bank of pieces in player1, player2 order
+var score = new [] { 0, 0 };
 
 while (true) // Loop to keep starting new game forever.
 {
@@ -11,9 +11,6 @@ while (true) // Loop to keep starting new game forever.
     Console.WriteLine("Press any key to play again.");
     Console.ReadKey();
 }
-
-return;
-
 
 static void PlayGame(char[,] board, char[] pieces, int[] score)
 {
@@ -53,39 +50,37 @@ static void PlayGame(char[,] board, char[] pieces, int[] score)
                     break;
                 }
                 // Input is now vetted
+
+                board[row, col] = pieces[player - 1]; // Place piece
+
+                // Check if placing the piece has put the board into a win condition.
+                if (CheckWin(board))
+                {
+                    Console.Clear();
+                    PrintBoard(board);
+                    Console.WriteLine($"Player {player} wins!");
+                    score[player - 1]++;
+                    play = false;
+                    break;
+                }
+
+                // Check if placing the piece has put the board into a tie condition.
+                else if (CheckTie(board))
+                {
+                    Console.Clear();
+                    PrintBoard(board);
+                    Console.WriteLine("Scratch! Neither player wins!");
+                    play = false;
+                    break;
+                }
+
+                // In absence of win or tie, switch player, print new board, and keep playing.
                 else
                 {
-                    board[row, col] = pieces[player - 1]; // Place piece
-
-                    // Check if placing the piece has put the board into a win condition.
-                    if (CheckWin(board))
-                    {
-                        Console.Clear();
-                        PrintBoard(board);
-                        Console.WriteLine($"Player {player} wins!");
-                        score[player - 1]++;
-                        play = false;
-                        break;
-                    }
-
-                    // Check if placing the piece has put the board into a tie condition.
-                    else if (CheckTie(board))
-                    {
-                        Console.Clear();
-                        PrintBoard(board);
-                        Console.WriteLine("Scratch! Neither player wins!");
-                        play = false;
-                        break;
-                    }
-
-                    // In absence of win or tie, switch player, print new board, and keep playing.
-                    else
-                    {
-                        player = SwitchPlayer(player);
-                        Console.Clear();
-                        PrintBoard(board);
-                        break;
-                    }
+                    player = SwitchPlayer(player);
+                    Console.Clear();
+                    PrintBoard(board);
+                    break;
                 }
 
             // If the input int doesn't match a space (1-9), notify them of restriction and re-prompt input.
@@ -155,12 +150,7 @@ static bool CheckWin(char[,] board)
         return true;
     }
 
-    if (board[0,2] != ' ' && board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0]) // If top-right => bot-left diagonal is equal AND at least one is not blank, then win condition exists.
-    {
-        return true;
-    }
-
-    return false;
+    return board[0,2] != ' ' && board[0, 2] == board[1, 1] && board[1, 1] == board[2, 0]; // If top-right => bot-left diagonal is equal AND at least one is not blank, then win condition exists.
 }
 
 // Responsible for printing out the board. I would like to add capability to print winning line in color in the future.
