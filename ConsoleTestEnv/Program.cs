@@ -12,7 +12,7 @@ while (true) // Loop to keep starting new game forever.
     Console.ReadKey();
 }
 
-static void PlayGame(char[,] board, char[] pieces, int[] score)
+void PlayGame(char[,] board, char[] pieces, int[] score)
 {
     // Initialize loop case and starting player.
     bool play = true;
@@ -154,8 +154,12 @@ static bool CheckWin(char[,] board)
 }
 
 // Responsible for printing out the board. I would like to add capability to print winning line in color in the future.
-static void PrintBoard(char[,] board) //Function to create 
+ void PrintBoard(char[,] board) //Function to create 
 {
+    if (score[0] != 0)
+    {
+        Console.WriteLine($"Score: Player 1 - {score[0]} ; Player 2 - {score[1]}");
+    }
     Console.WriteLine("   |   |   ");
     Console.WriteLine(" {0} | {1} | {2} ", board[0,0], board[0,1], board[0,2]);
     Console.WriteLine("___|___|___");
